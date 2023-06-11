@@ -39,9 +39,14 @@
 <body>
     <!-- Menampilkan hasil pengelompokan -->
     <div class="container">
-        <h1>Hasil Pengelompokan</h1>
-
-        <!-- Menampilkan scatter plot -->
+        <h2>Cluster Labels:</h2>
+        <p>{{ labels }}</p>
+        <h2>Central Points:</h2>
+        <ul>
+            {% for point in central_points %}
+                <li>{{ point }}</li>
+            {% endfor %}
+        </ul>
         <div class="chart-container">
             <canvas id="scatterChart"></canvas>
         </div>
@@ -68,17 +73,22 @@
             // Mengisi data dan warna untuk setiap data
             for (var label in groupedLabels) {
                 var count = groupedLabels[label];
+                var centralPoint = centralPoints[labels];  // Get the central point for the current label
+
                 for (var i = 0; i < count; i++) {
                     var newData = {
-                        x: Math.random() * 100, // Menggunakan nilai acak untuk sumbu x
-                        y: Math.random() * 100, // Menggunakan nilai acak untuk sumbu y
+                        // TODO: Modify x and y coordinate to referred as the csv file 
+                        x: centralPoint.x,  // Use the x-coordinate of the central point
+                        y: centralPoint.y,  // Use the y-coordinate of the central point
                         label: label
                     };
                     data.push(newData);
                 }
+
                 var color = '#' + Math.floor(Math.random() * 16777215).toString(16);
                 colors.push(color);
             }
+
 
             // Membuat konfigurasi scatter plot
             var config = {
@@ -120,7 +130,7 @@
                         }
                     }
                 }
-            };
+            };random
 
             // Membuat scatter plot menggunakan Chart.js
             var ctx = document.getElementById('scatterChart').getContext('2d');
