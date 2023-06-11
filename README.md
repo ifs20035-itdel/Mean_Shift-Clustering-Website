@@ -1,12 +1,20 @@
 # Pemenuhan Tugas Mata Kuliah Pembelajaran Mesin
-Institut Teknologi Del
+
 
 ### Kelompok Pembelajaran Mesin - T/A 2023
+
+### Program Studi S1 Informatika 
+
 Samuel Tobing
+
 Rolasta Sitorus
+
 Aditya Gultom
+
 Michael Napitupulu
+
 Fany Lumban siantar
+
 Lusye Pasaribu
 
 
