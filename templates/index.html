@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Clustering Website</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .sidebar {
+            width: 200px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 50%;
+            padding: 20px;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
+        * {
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .konten {
+            --c: #8A9B0F;
+            /* the border color */
+            --b: 10px;
+            /* the border thickness*/
+            --g: 5px;
+            /* the gap on hover */
+
+            padding: calc(var(--g) + var(--b));
+            --_g: #0000 25%, var(--c) 0;
+            background:
+                conic-gradient(from 180deg at top var(--b) right var(--b), var(--_g)) var(--_i, 200%) 0 /200% var(--_i, var(--b)) no-repeat,
+                conic-gradient(at bottom var(--b) left var(--b), var(--_g)) 0 var(--_i, 200%)/var(--_i, var(--b)) 200% no-repeat;
+            transition: .3s, background-position .3s .3s;
+            cursor: pointer;
+        }
+
+        .konten:hover {
+            --_i: 100%;
+            transition: .3s, background-size .3s .3s;
+        }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Mean-shift</h2>
+        <ul class="navbar-nav mt-5">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#" id="sidebar-home">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="sidebar-clustering">Clustering</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container" id="content">
+        <h1 class="text-center konten">Clustering Website</h1>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-danger mt-4">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <form action="/cluster" method="POST" class="mt-4" id="clustering-form" style="display: none;">
+            <div class="mb-3">
+                <label for="parameter" class="form-label">Parameter:</label>
+                <select class="form-select" id="parameter" name="parameter">
+                    <option value="Usia">Usia</option>
+                    <option value="Pendapatan">Pendapatan</option>
+                    <option value="Pengeluaran">Pengeluaran</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Cluster</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const homeSidebar = document.getElementById('sidebar-home');
+        const clusteringSidebar = document.getElementById('sidebar-clustering');
+        const content = document.getElementById('content');
+        const clusteringForm = document.getElementById('clustering-form');
+
+        homeSidebar.addEventListener('click', () => {
+            content.innerHTML = '<blockquote class="mt-5"><i>Meanshift is falling under the category of a clustering algorithm in contrast of Unsupervised learning that assigns the data points to the clusters iteratively by shifting points towards the mode (mode is the highest density of data points in the region, in the context of the Meanshift). As such, it is also known as the Mode-seeking algorithm. Mean-shift algorithm has applications in the field of image processing and computer vision.</i></blockquote>';
+            clusteringForm.style.display = 'none';
+        });
+
+
+        clusteringSidebar.addEventListener('click', () => {
+            content.innerHTML = `
+                <h1 class="mt-5">Clustering Website</h1>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="alert alert-danger mt-4">
+                    {% for message in messages %}
+                    <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+                <form action="/cluster" method="POST" class="mt-4">
+                    <div class="mb-3">
+                        <label for="parameter" class="form-label">Parameter:</label>
+                        <select class="form-select" id="parameter" name="parameter">
+                            <option value="Usia">Usia</option>
+                            <option value="Pendapatan">Pendapatan</option>
+                            <option value="Pengeluaran">Pengeluaran</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cluster</button>
+                </form>`;
+            clusteringForm.style.display = 'block';
+        });
+    </script>
+</body>
+
+</html>

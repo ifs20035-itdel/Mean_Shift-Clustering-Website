@@ -1,0 +1,140 @@
+<!-- result.html -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hasil Pengelompokan</title>
+    <!-- Memuat library Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            width: 400px;
+            position: relative;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+        }
+
+        #scatterChart {
+            max-width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Menampilkan hasil pengelompokan -->
+    <div class="container">
+        <h1>Hasil Pengelompokan</h1>
+
+        <!-- Menampilkan scatter plot -->
+        <div class="chart-container">
+            <canvas id="scatterChart"></canvas>
+        </div>
+
+        <script>
+            // Mengambil data label dari template dan mengubahnya menjadi array JavaScript
+            var labels = JSON.parse('{{ labels | tojson | safe }}');
+
+            // Menghitung jumlah masing-masing data
+            var groupedLabels = {};
+            for (var i = 0; i < labels.length; i++) {
+                var label = labels[i];
+                if (label in groupedLabels) {
+                    groupedLabels[label]++;
+                } else {
+                    groupedLabels[label] = 1;
+                }
+            }
+
+            // Membuat array untuk data dan warna
+            var data = [];
+            var colors = [];
+
+            // Mengisi data dan warna untuk setiap data
+            for (var label in groupedLabels) {
+                var count = groupedLabels[label];
+                for (var i = 0; i < count; i++) {
+                    var newData = {
+                        x: Math.random() * 100, // Menggunakan nilai acak untuk sumbu x
+                        y: Math.random() * 100, // Menggunakan nilai acak untuk sumbu y
+                        label: label
+                    };
+                    data.push(newData);
+                }
+                var color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+                colors.push(color);
+            }
+
+            // Membuat konfigurasi scatter plot
+            var config = {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            grid: {
+                                display: true,
+                                drawBorder: true
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                drawBorder: true
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return context.dataset.data[context.dataIndex].label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Membuat scatter plot menggunakan Chart.js
+            var ctx = document.getElementById('scatterChart').getContext('2d');
+            new Chart(ctx, config);
+        </script>
+
+        <!-- Tombol Kembali -->
+        <form action="/reset">
+            <input type="submit" value="Kembali">
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
