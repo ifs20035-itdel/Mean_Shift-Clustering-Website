@@ -36,16 +36,14 @@ def cluster():
         gender_mapping = {"Pria": 0, "Wanita": 1}
         data[:, 3] = [gender_mapping[gender] for gender in data[:, 3]]
 
-        np.random.seed(42)
-
         # Perform clustering using MeanShift algorithm
         clustering = MeanShift().fit(data)
 
         # Get the labels from the clustering result
         labels = clustering.labels_
 
-        # Calculate the central point (centroid) of each cluster
-        central_points = clustering.cluster_centers_[:, :-1]
+        # Calculate the central point (centroid) of each cluster with 2 decimal places
+        central_points = [[f"{point:.2f}" for point in cluster] for cluster in clustering.cluster_centers_[:, :-1].tolist()]
 
         # Combine similar groups into one group
         unique_labels = np.unique(labels)
@@ -58,14 +56,16 @@ def cluster():
             else:
                 combined_labels.append(str(df.loc[label, "ID_Pelanggan"]))
 
-        # Convert the labels to a single string without commas and spaces
-        combined_labels_string = ''.join(combined_labels)
+        # Convert the labels to a single string without commas and spaces with 2 decimal places
+        combined_labels_string = ', '.join([f"{float(label):.2f}" for label in combined_labels])
 
         return render_template("result.html", labels=combined_labels_string, central_points=central_points)
 
     except Exception as e:
         flash("An error occurred while performing clustering: " + str(e), "error")
         return redirect("/")
+
+
 
 @app.route("/reset")
 def reset():

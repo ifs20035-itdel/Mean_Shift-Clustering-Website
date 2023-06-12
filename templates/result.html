@@ -39,8 +39,8 @@
 <body>
     <!-- Menampilkan hasil pengelompokan -->
     <div class="container">
-        <h2>Cluster Labels:</h2>
-        <p>{{ labels }}</p>
+        <!-- <h2>Cluster Labels:</h2> -->
+        <!-- <p>{{ labels }}</p> -->
         <h2>Central Points:</h2>
         <ul>
             {% for point in central_points %}
@@ -54,7 +54,7 @@
         <script>
             // Mengambil data label dari template dan mengubahnya menjadi array JavaScript
             var labels = JSON.parse('{{ labels | tojson | safe }}');
-
+        
             // Menghitung jumlah masing-masing data
             var groupedLabels = {};
             for (var i = 0; i < labels.length; i++) {
@@ -65,31 +65,32 @@
                     groupedLabels[label] = 1;
                 }
             }
-
+        
+            // Mengambil data central points dari template dan mengubahnya menjadi array JavaScript
+            var centraloints = JSON.parse('{{ central_points | tojson | safe }}');
+        
             // Membuat array untuk data dan warna
             var data = [];
             var colors = [];
-
+        
             // Mengisi data dan warna untuk setiap data
             for (var label in groupedLabels) {
                 var count = groupedLabels[label];
-                var centralPoint = centralPoints[labels];  // Get the central point for the current label
-
+                var centralPoint = centralPoints[label]; // Get the central point for the current label
+        
                 for (var i = 0; i < count; i++) {
                     var newData = {
-                        // TODO: Modify x and y coordinate to referred as the csv file 
-                        x: centralPoint.x,  // Use the x-coordinate of the central point
-                        y: centralPoint.y,  // Use the y-coordinate of the central point
+                        x: centralPoint[0], // Use the x-coordinate of the central point
+                        y: centralPoint[1], // Use the y-coordinate of the central point
                         label: label
                     };
                     data.push(newData);
                 }
-
+        
                 var color = '#' + Math.floor(Math.random() * 16777215).toString(16);
                 colors.push(color);
             }
-
-
+        
             // Membuat konfigurasi scatter plot
             var config = {
                 type: 'scatter',
@@ -130,12 +131,14 @@
                         }
                     }
                 }
-            };random
-
+            };
+        
             // Membuat scatter plot menggunakan Chart.js
             var ctx = document.getElementById('scatterChart').getContext('2d');
             new Chart(ctx, config);
         </script>
+        
+        
 
         <!-- Tombol Kembali -->
         <form action="/reset">
